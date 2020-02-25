@@ -1,9 +1,10 @@
 const express = require('express');
-const Usuario = require('../models/usuario');
-const app = express();
 const bcrypt = require('bcrypt');
+const Usuario = require('../models/usuario');
+const { verificaToken, verificaAdminRol } = require('../middlewares/autenticacion');
+const app = express();
 
-app.get('/usuario', function(req, res) {
+app.get('/usuario', verificaToken, function(req, res) {
   const desde = Number(req.query.desde) || 0;
   const limite = Number(req.query.limite) || 5;
   const filtro = { estado: true };
@@ -20,7 +21,7 @@ app.get('/usuario', function(req, res) {
     });
 });
 
-app.post('/usuario', function(req, res) {
+app.post('/usuario', verificaToken, verificaAdminRol, function(req, res) {
   const body = req.body;
   const usuario = new Usuario({ ...body, password: bcrypt.hashSync(body.password, 10) });
   usuario.save((err, usuarioDB) => {
@@ -29,7 +30,7 @@ app.post('/usuario', function(req, res) {
   });
 });
 
-app.put('/usuario/:id', function(req, res) {
+app.put('/usuario/:id', verificaToken, verificaAdminRol, function(req, res) {
   const id = req.params.id;
   const body = {};
   ['nombre', 'emial', 'img', 'rol', 'estado'].forEach(prop => (body[prop] = req.body[prop]));
@@ -40,7 +41,7 @@ app.put('/usuario/:id', function(req, res) {
   });
 });
 
-app.delete('/usuario/:id', function(req, res) {
+app.delete('/usuario/:id', verificaToken, verificaAdminRol, function(req, res) {
   const id = req.params.id;
   const cambiaEstado = { estado: false };
   // Usuario.findByIdAndRemove(id, (err, usuarioDB) => {
