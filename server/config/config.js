@@ -28,3 +28,9 @@ process.env.SEED = process.env.SEED || 'este-es-el-sid-de-desarrollo';
 const urlDB = process.env.NODE_ENV === 'dev' ? 'mongodb://localhost:27017/cafeudemy' : process.env.MONGO_URI;
 
 process.env.URLDB = urlDB;
+
+// ================================
+// Google Client ID
+// ================================
+process.env.CLIENT_ID =
+  process.env.CLIENT_ID || '960938978476-6d6o45ltr1olehp1rd45bfeqhkvesurt.apps.googleusercontent.com';
