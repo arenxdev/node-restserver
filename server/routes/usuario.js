@@ -26,14 +26,14 @@ app.post('/usuario', verificaToken, verificaAdminRol, function(req, res) {
   const usuario = new Usuario({ ...body, password: bcrypt.hashSync(body.password, 10) });
   usuario.save((err, usuarioDB) => {
     if (err) return res.status(400).json({ ok: false, err });
-    res.json({ ok: true, usuario: usuarioDB });
+    res.status(201).json({ ok: true, usuario: usuarioDB });
   });
 });
 
 app.put('/usuario/:id', verificaToken, verificaAdminRol, function(req, res) {
   const id = req.params.id;
   const body = {};
-  ['nombre', 'emial', 'img', 'rol', 'estado'].forEach(prop => (body[prop] = req.body[prop]));
+  ['nombre', 'email', 'img', 'rol', 'estado'].forEach(prop => (body[prop] = req.body[prop]));
   console.log(body);
   Usuario.findByIdAndUpdate(id, body, { new: true, runValidators: true }, (err, usuarioDB) => {
     if (err) return res.status(400).json({ ok: false, err });
